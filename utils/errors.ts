@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express"
 
-class ValidationError extends Error {}
+export class ValidationError extends Error {}
 
 export const handleError = (error: Error, req: Request, res: Response, next: NextFunction) => {
     console.error(error)
