@@ -2,6 +2,8 @@ import { ObjectId } from "mongodb";
 import { AdItem } from "../types";
 import { ValidationError } from "../utils/errors";
 
+type NewAdRecord = Omit<AdItem, "_id">
+
 export class AdRecord implements AdItem {
     _id: ObjectId
     name: string
@@ -11,12 +13,12 @@ export class AdRecord implements AdItem {
     lat: number
     lng: number
 
-    constructor(obj: AdItem){
+    constructor(obj: NewAdRecord){
         if(!obj.name || obj.name.length > 100){
             throw new ValidationError('The name of the ad cannot be empty or greater than 100 characters.')
         }
 
-        if(obj.description.length < 1000) {
+        if(obj.description.length > 1000) {
             throw new ValidationError('The description cannot greater than 1000 characters.')
         }
 
@@ -33,7 +35,6 @@ export class AdRecord implements AdItem {
             throw new ValidationError('Coords are invalid')
         }
 
-        this._id = obj._id
         this.name = obj.name
         this.description = obj.description
         this.price = obj.price
