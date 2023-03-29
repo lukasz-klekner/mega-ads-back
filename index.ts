@@ -1,6 +1,8 @@
 import express, { json } from "express";
 import cors from "cors";
 import "express-async-errors"
+import rateLimit from "express-rate-limit"
+
 import { handleError } from "./utils/errors";
 
 const app = express();
@@ -9,6 +11,10 @@ app.use(cors({
     origin: 'http://localhost:3000  '
 }))
 app.use(json())
+app.use(rateLimit({
+    windowMs: 1000 * 60 * 5,
+    max: 100
+}))
 
 app.get('/', async (req, res) => {
     throw new Error('Dammmn!')
