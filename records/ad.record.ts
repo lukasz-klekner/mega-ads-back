@@ -1,8 +1,11 @@
 import { ObjectId } from "mongodb";
 import { AdItem } from "../types";
+import { adsCollection } from "../utils/db";
 import { ValidationError } from "../utils/errors";
 
-type NewAdRecord = Omit<AdItem, "_id">
+interface NewAdRecord extends Omit<AdItem, "_id"> {
+    _id?: ObjectId
+}
 
 export class AdRecord implements AdItem {
     _id: ObjectId
@@ -35,11 +38,20 @@ export class AdRecord implements AdItem {
             throw new ValidationError('Coords are invalid')
         }
 
+        this._id = obj._id
         this.name = obj.name
         this.description = obj.description
         this.price = obj.price
         this.url = obj.url
         this.lat = obj.lat
         this.lng = obj.lng
+    }
+
+    static async getOne(id: string): Promise<AdRecord | null> {
+        const ad = await adsCollection.findOne({
+            _id: new ObjectId(id)
+        }) as AdRecord
+
+        return ad === null ? null : new AdRecord(ad)
     }
 }
