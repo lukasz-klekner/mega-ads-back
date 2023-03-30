@@ -54,4 +54,10 @@ export class AdRecord implements AdItem {
 
         return ad === null ? null : new AdRecord(ad)
     }
+
+    static async findAll(name: string): Promise<AdRecord[] | null> {
+        return (await adsCollection.find({
+            name: {'$regex' : name, '$options' : 'i'}
+        }).toArray() as AdRecord[]).map(obj => new AdRecord(obj))
+    }
 }
