@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { AdItem } from "../types";
+import { AdItem, SimpleAdItem } from "../types";
 import { adsCollection } from "../utils/db";
 import { ValidationError } from "../utils/errors";
 
@@ -55,9 +55,17 @@ export class AdRecord implements AdItem {
         return ad === null ? null : new AdRecord(ad)
     }
 
-    static async findAll(name: string): Promise<AdRecord[] | null> {
+    static async findAll(name: string): Promise<SimpleAdItem[] | null> {
         return (await adsCollection.find({
             name: {'$regex' : name, '$options' : 'i'}
-        }).toArray() as AdRecord[]).map(obj => new AdRecord(obj))
+        }).toArray() as AdRecord[]).map(obj => {
+            const { _id, lat, lng } = obj
+            
+            return {
+                _id,
+                lat,
+                lng
+            }
+        })
     }
 }
