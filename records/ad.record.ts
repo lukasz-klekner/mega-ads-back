@@ -68,4 +68,10 @@ export class AdRecord implements AdItem {
             }
         })
     }
+
+    async insert(){
+        await adsCollection.insertOne(this)
+
+        return this._id
+    }
 }
