@@ -4,6 +4,7 @@ import "express-async-errors"
 import rateLimit from "express-rate-limit"
 
 import { handleError } from "./utils/errors";
+import { adRouter } from "./routers/ad";
 
 const app = express();
 
@@ -16,9 +17,7 @@ app.use(rateLimit({
     max: 100
 }))
 
-app.get('/', async (req, res) => {
-    throw new Error('Dammmn!')
-})
+app.use('/ad', adRouter)
 
 app.use(handleError)
 
